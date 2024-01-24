@@ -20,7 +20,7 @@ router.post('/treasures', async(req, res, next) => {
     }
     const treaMaxNumber = await myTrea.findOne().sort('-number').exec();    // 해당하는 마지막 number 조회
     const number = treaMaxNumber ? treaMaxNumber.number + 1 : 1;
-    const treasures = new myTrea({goods, number});
+    const treasures = new myTrea({goods, number,});
     await treasures.save();     // DB에 저장
     
     return res.status(201).json({treasures: treasures});    // 애장품 등록 성공시 treasures 라는 곳에 treasures의 값 할당
@@ -42,7 +42,7 @@ router.get('/treasures', async(req, res, next) => {
 // 애장품 순서 변경, 날짜, 해제, 내용변경 api
 router.patch('/treasures/:treaId', async(req, res, next) => {
     const {treaId} = req.params;
-    const {number, registration, goods} = req.body;
+    const {number, registration, goods,state} = req.body;
 
     const currentTrea = await myTrea.findById(treaId).exec();   // 애장품 정보 가져오기
     if (!currentTrea) {
@@ -58,10 +58,13 @@ router.patch('/treasures/:treaId', async(req, res, next) => {
 
     }
     if (registration !== undefined) {
-        currentTrea.registration = registration ? new Date() : null;
+        currentTrea.registration = registration ? new Date() : null;    // Date 라는 값은 비어 있어도 자동으로 생성(현재시간으로 설정)됨
     }
     if (goods) {
         currentTrea.goods = goods;  // currentTrea의 상품명은 전달받은 상품명으로 바꾼다.
+    }
+    if (state === true) {
+        currentTrea.state = state ? true : sale;    // Boolean은 비어있으면 값이 없기 때문에 값을 설정해줘야함
     }
     await currentTrea.save();
 

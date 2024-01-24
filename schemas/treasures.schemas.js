@@ -13,10 +13,11 @@ const myTrea = new mongoose.Schema({
         type : Date,          // 등록 날짜
         required : false,   // 없으면 null, 있으면 date가 표시 될 거라 없어도 됨
     },
-    // State : {           // 애장품 판매여부
-    //     type : Boolean,      // true면 판매, false면 재고있음
-    //     required : true,    // 등록한 이상 판매 여부는 필수지
-    // },
+    state : {           // 애장품 판매여부
+        type : Boolean,      // true면 판매, false면 재고있음
+        required : true,    // 등록한 이상 판매 여부는 필수지
+        default : true    
+    },
 });
 
 export default mongoose.model("myTrea", myTrea);    // 스키마가 담긴 myTrea 모델 수출
